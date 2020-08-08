@@ -17,6 +17,11 @@ class UserSerializer(serializers.ModelSerializer):
         )
         read_only_field = ('id',)
 
+from rest_framework import serializers
+from api.models import Item
+from api.serializers.user import UserSerializer
+
+
 
 # class ItemSerializer(serializers.Serializer):
 #     id = serializers.IntegerField(read_only=True)

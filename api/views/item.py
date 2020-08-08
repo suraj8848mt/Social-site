@@ -7,7 +7,7 @@ from rest_framework.parsers import JSONParser
 from rest_framework import status, generics, mixins
 from rest_framework.response import Response
 from api.models import Item
-from api.serializers import ItemSerializer, ItemDetailSerializers
+from api.serializers.item import ItemSerializer, ItemDetailSerializers
 
 
 
