@@ -22,6 +22,10 @@ class Item(models.Model):
         if self.subtitle:
             return "%s | %s" % (self.title, self.subtitle)
         return self.title
+    
+    @property
+    def owner_email(self):
+        return self.owner.email
 
     def __str__(self):
         return self.title
