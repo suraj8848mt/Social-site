@@ -2,7 +2,7 @@
 from django.contrib import admin
 from django.urls import path, include
 
-from .views import ItemList, ItemDetail
+from api.views.item import ItemList, ItemDetail
 
 app_name= 'item'
 
