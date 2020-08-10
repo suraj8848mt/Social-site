@@ -116,4 +116,4 @@ STATIC_URL = '/static/'
 
 
 
-S3_BASE_URL = "http://s3.com/ipload/"
+S3_BASE_URL = "http://s3.com/upload/"

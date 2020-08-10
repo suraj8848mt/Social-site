@@ -2,6 +2,8 @@ from __future__ import unicode_literals
 
 from django.db import models
 from django.contrib.auth import get_user_model
+from django.conf import settings
+
 
 User = get_user_model()
 
@@ -22,7 +24,7 @@ class Profile(models.Model):
 class AssetBundle(models.Model):
     """
      Asset bundle profile model
-    http://s3.com/upload/{ab_kind}/{ab_salt}_{a_kind}.{a_extension}/
+    {hbase_url}/{ab_kind}/{ab_salt}_{a_kind}.{a_extension}/
      https://res.cloudinary.com/upload/{ab_kind}/{ab_salt}_{a_kind}.{a_extension}/
     """
     KIND_CHOICES = (
@@ -33,7 +35,7 @@ class AssetBundle(models.Model):
 
     salt = models.CharField(max_length=16)
     kind = models.CharField(max_length=5, choices=KIND_CHOICES, default="image")
-    base_url = models.CharField(max_length=255, default="")
+    base_url = models.CharField(max_length=255, default=settings.S3_BASE_URL)
 
     owner = models.ForeignKey(User, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -41,6 +43,14 @@ class AssetBundle(models.Model):
 
     def __str__(self):
         return "AssetBundle: %s" % self.salt
+    
+    def asset_urls(self): 
+        array = []
+        for asset in Asset.objects.filter(asset_bundle=self):
+            array.append({asset.kind: asset.full_url})
+        
+        return array
+
 
 
 
@@ -72,9 +82,14 @@ class Asset(models.Model):
 
 
     def __str__(self):
-        return "Asset: %: %s" % (self.salt, self.kind)
+       return "Asset: %s: %s" % (self.asset_bundle.salt, self.kind)
 
+    @property
+    def full_url(self):
+        return "%s%s/%s_%s.%s" % (self.asset_bundle.base_url, self.asset_bundle.kind, self.asset_bundle.salt, self.kind, self.extension)
+            #  {base_url}{ab_kind}/{ab_salt}_{a_kind}.{a.extension}
 
+            
 class Item(models.Model):
 
     """ This is model for items """
@@ -103,7 +118,7 @@ class Comment(models.Model):
 
 class Like(models.Model):
     item = models.ForeignKey(Item, on_delete=models.CASCADE)
-    
+
     owner = models.ForeignKey(User, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models. DateTimeField(auto_now=True)

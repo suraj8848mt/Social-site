@@ -36,7 +36,7 @@ from api.serializers.user import UserSerializer
 
 class ItemSerializer(serializers.ModelSerializer):
     """
-    Item Detail Serializers
+    Item List & Detail Serializers
     """
 
     owner = serializers.PrimaryKeyRelatedField(queryset=User.objects.all())
@@ -45,11 +45,12 @@ class ItemSerializer(serializers.ModelSerializer):
         model = Item
         fields = (
             'id',
-            'title',
-            'subtitle',
+            'asset_bundle',
             'owner',
+            'created_at',
+            'updated_at'
         )
-        read_only_fields = ('id',)
+        read_only_fields = ('id','owner_id')
 
 class ItemDetailSerializers(serializers.ModelSerializer):
 
@@ -63,9 +64,8 @@ class ItemDetailSerializers(serializers.ModelSerializer):
         model = Item
         fields = (
             'id',
-            'title',
-            'subtitle',
             'owner',
+            'asset_bundle',
             'created_at',
             'updated_at',
         )
